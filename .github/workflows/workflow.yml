@@ -6,7 +6,7 @@ on:
       - main  # Or your default branch
 
 jobs:
-  deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -21,11 +21,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
 
-    - name: Build and publish
+    - name: Build wheel
+      run: |
+        python setup.py sdist bdist_wheel
+
+    - name: Publish to PyPI
+      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
-        python setup.py sdist bdist_wheel
         twine upload dist/*
-
