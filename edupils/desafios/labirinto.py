@@ -109,9 +109,14 @@ class Jogador(ABC):
     def __init__(self, labirinto):
         self.labirinto = labirinto
         self.posicao = labirinto.entrada
+        self.historico = []
 
     @abstractmethod
     def mover(self):
+        pass
+
+    @abstractmethod
+    def redondezas_livres(self):
         pass
 
     def mostrar_jogador_e_labirinto(self):
@@ -137,8 +142,18 @@ class JogadorComBussola(Jogador):
 
             if not self.labirinto.eh_parede(nova_posicao):
                 self.posicao = nova_posicao
+                self.historico.append(self.posicao)
                 return True
         return False
+    
+    def redondezas_livres(self):
+        redondezas = []
+        h, w = self.posicao
+
+        for direcao, (dH, dW) in Jogador.DIRECOES:
+            if not self.labirinto.eh_parede((h+dH, w+dW)):
+                redondezas.append(direcao)
+        return redondezas
 
 
 class JogadorOrientado(Jogador):
@@ -172,5 +187,34 @@ class JogadorOrientado(Jogador):
 
         if not self.labirinto.eh_parede(nova_posicao):
             self.posicao = nova_posicao
+            self.historico.append(self.posicao)
             return True
         return False
+    
+    
+    def redondezas_livres(self):
+        redondezas = []
+        dH, dW = self.vetor
+        h, w = self.posicao
+        if not self.labirinto.eh_parede((h+dH, w+dW)):
+            redondezas.append("frente")
+        if not self.labirinto.eh_parede((h-dW, w+dH)):
+            redondezas.append("esquerda")
+        if not self.labirinto.eh_parede((h+dW, w-dH)):
+            redondezas.append("direita")
+        if not self.labirinto.eh_parede((h-dH, w-dW)):
+            redondezas.append("trás")
+        return redondezas
+    
+
+if __name__ == "__main__":
+    lab = Labirinto(10,10)
+    p = JogadorOrientado(lab)
+
+
+    for i in range(5):
+        redond = p.redondezas_livres()
+        if "frente" in redond:
+            p.mover()
+        else:
+            p.virar("esquerda")
