@@ -38,7 +38,7 @@ def criar_painel(
 
     for nome_painel in (
         [nome_painel_fundo] + 
-        [f"{nome_paineis_auxiliares}_{i}" for i in range(camadas_auxiliares)] + 
+        [f"{nome_paineis_auxiliares}_{str(i)}" for i in range(camadas_auxiliares)] + 
         [nome_painel_frente]
     ):
         painel = criar_painel(nome_painel, largura, altura)

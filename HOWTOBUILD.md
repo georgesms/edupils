@@ -1,0 +1,2 @@
+- Change the version in the setup.py file
+- Push the changes to the repository
