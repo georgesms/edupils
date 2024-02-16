@@ -1,5 +1,7 @@
 import random
 from abc import ABC, abstractmethod
+import ..constantes
+import ..desenho
 
 class Labirinto:
     DIRECOES = [(0, -1), (0, 1), (-1, 0), (1, 0)]
@@ -96,13 +98,34 @@ class Labirinto:
         h, w = coordenada
         return self.labirinto[h][w] == Labirinto.PAREDE
     
+    def mostrar(
+            self, 
+            camada=constantes.NOME_PAINEL_FUNDO,
+            largura_do_tile=25,
+        ):
+        altura_px = self.altura * largura_do_tile
+        largura_px = self.largura * largura_do_tile
+        painel = desenho.criar_painel(largura_px, altura_px)
+
+        for i, linha in enumerate(self.labirinto)
+            for j, celula in enumerate(linha):
+                if celula == Labirinto.PAREDE:
+                    desenho.desenhar_retangulo(
+                        j * largura_do_tile, 
+                        i * largura_do_tile, 
+                        largura_do_tile, 
+                        largura_do_tile, 
+                        camada, 
+                        cor_preenchimento=constantes.COR_ESCURA
+                    )
+    
 
 class Jogador(ABC):
     DIRECOES = {
-        'norte': (-1, 0),
-        'sul': (1, 0),
-        'leste': (0, 1),
-        'oeste': (0, -1)
+        'cima': (-1, 0),
+        'baixo': (1, 0),
+        'direita': (0, 1),
+        'esquerda': (0, -1)
     }
     DIRECORES_INV = {v:k for k,v in DIRECOES.items()}
 
@@ -158,15 +181,15 @@ class JogadorComBussola(Jogador):
 
 class JogadorOrientado(Jogador):
     OPCOES_REPRESENTACAO = {
-        'norte': '^',
-        'leste': '>',
-        'sul': 'v',
-        'oeste': '<'
+        'cima': '^',
+        'direita': '>',
+        'baixo': 'v',
+        'esquerda': '<'
     }
 
     def __init__(self, labirinto):
         super().__init__(labirinto)
-        self.orientacao = "sul"
+        self.orientacao = "baixo"
         self.vetor = Jogador.DIRECOES[self.orientacao]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
 
@@ -206,6 +229,10 @@ class JogadorOrientado(Jogador):
             redondezas.append("trás")
         return redondezas
     
+def criar_labirinto_e_jogador():
+    lab = Labirinto(10,10)
+    p = JogadorOrientado(lab)
+    return lab, p
 
 if __name__ == "__main__":
     lab = Labirinto(10,10)
