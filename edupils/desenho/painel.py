@@ -21,9 +21,9 @@ def apagar_painel(id_painel):
 def criar_painel(
         largura=500, 
         altura=300,
-        nome_painel_fundo=NOME_PAINEL_FUNDO,
-        nome_painel_frente=NOME_PAINEL_FRENTE,
-        nome_painel_auxiliar=NOME_PAINEL_AUXILIAR,
+        nome_painel_fundo=constantes.NOME_PAINEL_FUNDO,
+        nome_painel_frente=constantes.NOME_PAINEL_FRENTE,
+        nome_painel_auxiliar=constantes.NOME_PAINEL_AUXILIAR,
     ):
     
     div = document.createElement("div")
