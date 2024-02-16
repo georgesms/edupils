@@ -1,6 +1,5 @@
 import asyncio
 from js import document
-from pyodide import create_proxy
 import math
 
 

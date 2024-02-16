@@ -1,5 +1,5 @@
 from js import document
-import edupils.constantes as constantes
+from .. import constantes
 
 # Function to create a canvas with specific attributes
 def criar_camada(id, width, height):

@@ -1,7 +1,7 @@
 import random
 from abc import ABC, abstractmethod
-import ..constantes
-import ..desenho
+from .. import constantes
+from .. import desenho
 
 class Labirinto:
     DIRECOES = [(0, -1), (0, 1), (-1, 0), (1, 0)]
@@ -107,7 +107,7 @@ class Labirinto:
         largura_px = self.largura * largura_do_tile
         painel = desenho.criar_painel(largura_px, altura_px)
 
-        for i, linha in enumerate(self.labirinto)
+        for i, linha in enumerate(self.labirinto):
             for j, celula in enumerate(linha):
                 if celula == Labirinto.PAREDE:
                     desenho.desenhar_retangulo(
