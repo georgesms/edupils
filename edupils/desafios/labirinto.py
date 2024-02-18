@@ -118,6 +118,9 @@ class Labirinto:
                         camada, 
                         cor_preenchimento=constantes.COR_ESCURA
                     )
+
+    def get_labirinto(self):
+        return self.labirinto, self.paredes
     
 
 class Jogador(ABC):
