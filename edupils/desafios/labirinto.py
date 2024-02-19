@@ -94,7 +94,6 @@ class Labirinto:
         for linha in self.labirinto:
             print(' '.join(linha))
 
-
     def eh_parede(self, coordenada):
         h, w = coordenada
         return self.labirinto[h][w] == Labirinto.PAREDE
