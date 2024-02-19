@@ -203,6 +203,7 @@ class JogadorOrientado(Jogador):
         self.orientacao = "baixo"
         self.vetor = Jogador.DIRECOES[self.orientacao]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
+        self.redondezas_livres()
 
     def virar(self, direcao):
         h, w = self.vetor
@@ -229,18 +230,19 @@ class JogadorOrientado(Jogador):
 
     
     def redondezas_livres(self):
-        redondezas = []
+        self.redondezas = {}
         dH, dW = self.vetor
         h, w = self.posicao
-        if not self.labirinto.eh_parede((h+dH, w+dW)):
-            redondezas.append("frente")
-        if not self.labirinto.eh_parede((h-dW, w+dH)):
-            redondezas.append("esquerda")
-        if not self.labirinto.eh_parede((h+dW, w-dH)):
-            redondezas.append("direita")
-        if not self.labirinto.eh_parede((h-dH, w-dW)):
-            redondezas.append("trás")
-        return redondezas
+        self.redondezas["frente"] = not self.labirinto.eh_parede((h+dH, w+dW))
+        self.redondezas["esquerda"] = not self.labirinto.eh_parede((h-dW, w+dH))
+        self.redondezas["direita"] = not self.labirinto.eh_parede((h+dW, w-dH))
+        self.redondezas["trás"] = not self.labirinto.eh_parede((h-dH, w-dW))
+        
+        return self.redondezas
+    
+    def esta_livre(self, direcao):
+        if direcao in self.redondezas.keys():
+            return self.redondezas[direcao]
 
     def mostrar(
             self,
