@@ -216,6 +216,7 @@ class JogadorOrientado(Jogador):
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
         self.mostrar()
+        self.redondezas_livres()
         
     async def mover(self, passos=1):
         dH, dW = self.vetor
@@ -227,6 +228,8 @@ class JogadorOrientado(Jogador):
                 self.historico.append(self.posicao)
                 self.mostrar()
                 await asyncio.sleep(0.5)
+
+        self.redondezas_livres()
 
     
     def redondezas_livres(self):
