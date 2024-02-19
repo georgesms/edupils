@@ -1,6 +1,6 @@
 import random
 from abc import ABC, abstractmethod
-import asyncio
+#import asyncio
 from .. import constantes
 from .. import desenho
 
@@ -218,7 +218,7 @@ class JogadorOrientado(Jogador):
         self.mostrar()
         self.redondezas_livres()
         
-    async def mover(self, passos=1):
+    def mover(self, passos=1): #async 
         dH, dW = self.vetor
 
         for p in range(passos):
@@ -227,7 +227,8 @@ class JogadorOrientado(Jogador):
                 self.posicao = nova_posicao
                 self.historico.append(self.posicao)
                 self.mostrar()
-                await asyncio.sleep(0.5)
+                #if p > 0:
+                #await asyncio.sleep(0.5)
 
         self.redondezas_livres()
 
