@@ -1,6 +1,6 @@
 import random
 from abc import ABC, abstractmethod
-import asyncio
+#import asyncio
 from .. import constantes
 from .. import desenho
 
@@ -104,9 +104,8 @@ class Labirinto:
             camada=constantes.NOME_PAINEL_FUNDO,
             largura_do_tile=25,
         ):
-        altura_px = self.altura * largura_do_tile
-        largura_px = self.largura * largura_do_tile
-        painel = desenho.criar_painel(largura_px, altura_px)
+
+        desenho.apagar_painel(camada)
 
         for i, linha in enumerate(self.labirinto):
             for j, celula in enumerate(linha):
@@ -205,7 +204,7 @@ class JogadorOrientado(Jogador):
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
         self.redondezas_livres()
 
-    async def virar(self, direcao):
+    def virar(self, direcao): #async
         h, w = self.vetor
         if direcao == 'esquerda':
             self.vetor = (-w, h)
@@ -215,19 +214,19 @@ class JogadorOrientado(Jogador):
 
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
-        await asyncio.sleep(0.5)
+        #await asyncio.sleep(0.5)
         self.mostrar()
         self.redondezas_livres()
         
-    async def mover(self, passos=1): #async 
+    def mover(self, passos=1): #async 
         dH, dW = self.vetor
-        await asyncio.sleep(0.1)
+        #await asyncio.sleep(0.1)
         for p in range(passos):
             nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
             if not self.labirinto.eh_parede(nova_posicao):
                 self.posicao = nova_posicao
                 self.historico.append(self.posicao)
-                await asyncio.sleep(0.5)
+                #await asyncio.sleep(0.5)
                 self.mostrar()
                 
 
