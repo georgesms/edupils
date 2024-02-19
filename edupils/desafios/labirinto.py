@@ -207,16 +207,16 @@ class JogadorOrientado(Jogador):
     def virar(self, direcao):
         h, w = self.vetor
         if direcao == 'esquerda':
-            self.vetor = (w, -h)
+            self.vetor = (-w, h)
             
         elif direcao == 'direita':
-            self.vetor = (-w, h)
+            self.vetor = (w, -h)
 
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
         self.mostrar()
         
-    def mover(self, passos=1):
+    async def mover(self, passos=1):
         dH, dW = self.vetor
 
         for p in range(passos):
@@ -225,7 +225,7 @@ class JogadorOrientado(Jogador):
                 self.posicao = nova_posicao
                 self.historico.append(self.posicao)
                 self.mostrar()
-                asyncio.sleep(0.5)
+                await asyncio.sleep(0.5)
 
     
     def redondezas_livres(self):
