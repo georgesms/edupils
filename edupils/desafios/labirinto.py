@@ -253,7 +253,7 @@ class JogadorOrientado(Jogador):
             raio_circunscrito=(largura_do_tile-5) /2, 
             cor=constantes.COR_PRIMARIA, 
             id_canvas=camada, 
-            angulo=self.ORIENTACAO_PARA_GRAUS(self.orientacao),
+            angulo=self.ORIENTACAO_PARA_GRAUS[self.orientacao],
         )
 
     
