@@ -27,11 +27,11 @@ def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_ca
     largura_base = raio_circunscrito * proporcao_base
     altura = math.sqrt( raio_circunscrito ** 2 - (largura_base / 2) ** 2)
     
-    # Calcula os vértices do triângulo antes da rotação
+    # Calcula os vértices do triângulo antes da rotação, PADRÃO APONTADO PARA DIREITA
     vertices = [
-        (x_baricentro - largura_base / 2, y_baricentro + altura),  # Vértice inferior esquerdo
-        (x_baricentro, y_baricentro - raio_circunscrito),  # Vértice superior
-        (x_baricentro + largura_base / 2, y_baricentro + altura) # Vértice inferior direito
+        (x_baricentro - altura , y_baricentro + (largura_base / 2)),  # Vértice inferior esquerdo
+        (x_baricentro + raio_circunscrito, y_baricentro),  # Vértice superior
+        (x_baricentro - altura , y_baricentro - (largura_base / 2)) # Vértice inferior direito
     ]
     
     # Rotaciona os vértices

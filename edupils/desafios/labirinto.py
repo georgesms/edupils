@@ -190,6 +190,13 @@ class JogadorOrientado(Jogador):
         'esquerda': '<'
     }
 
+    ORIENTACAO_PARA_GRAUS = {
+        'cima': 90,
+        'direita': 0,
+        'baixo': 270,
+        'esquerda': 180
+    }
+
     def __init__(self, labirinto):
         super().__init__(labirinto)
         self.orientacao = "baixo"
@@ -206,17 +213,18 @@ class JogadorOrientado(Jogador):
 
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
+        self.mostrar()
         
-    def mover(self):
+    def mover(self, passos=1):
         dH, dW = self.vetor
         nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
 
-        if not self.labirinto.eh_parede(nova_posicao):
-            self.posicao = nova_posicao
-            self.historico.append(self.posicao)
-            return True
-        return False
-    
+        for p in range(passos):
+            if not self.labirinto.eh_parede(nova_posicao):
+                self.posicao = nova_posicao
+                self.historico.append(self.posicao)
+                self.mostrar()
+
     
     def redondezas_livres(self):
         redondezas = []
@@ -231,6 +239,23 @@ class JogadorOrientado(Jogador):
         if not self.labirinto.eh_parede((h-dH, w-dW)):
             redondezas.append("trás")
         return redondezas
+
+    def mostrar(
+            self,
+            camada=constantes.NOME_PAINEL_FRENTE,
+            largura_do_tile=25,
+        ):
+        desenho.apagar_painel(camada)
+        h, w = self.posicao
+        desenho.desenhar_triangulo(
+            x_baricentro=w * largura_do_tile + largura_do_tile/2, 
+            y_baricentro=h * largura_do_tile + largura_do_tile/2, 
+            raio_circunscrito=(largura_do_tile-5) /2, 
+            cor=constantes.COR_PRIMARIA, 
+            id_canvas=camada, 
+            angulo=self.ORIENTACAO_PARA_GRAUS(self.orientacao),
+        )
+
     
 def criar_labirinto_e_jogador():
     lab = Labirinto(10,10)
