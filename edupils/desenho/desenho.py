@@ -20,7 +20,7 @@ def rotacionar_ponto(x, y, x_centro, y_centro, angulo):
     y_rotacionado = (x - x_centro) * math.sin(radianos) + (y - y_centro) * math.cos(radianos) + y_centro
     return x_rotacionado, y_rotacionado
 
-def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_canvas, angulo=0, proporcao_base=.4):
+def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_canvas, angulo=0, proporcao_base=1):
     canvas = document.getElementById(id_canvas)
     ctx = canvas.getContext('2d')
 

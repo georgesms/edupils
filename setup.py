@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='edupils',
-    version='0.1.11',
+    version='0.1.12',
     author='Georges Spyrides',
     author_email='georgesmss@gmail.com',
     packages=find_packages(),

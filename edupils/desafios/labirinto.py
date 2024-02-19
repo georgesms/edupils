@@ -1,5 +1,6 @@
 import random
 from abc import ABC, abstractmethod
+import asyncio
 from .. import constantes
 from .. import desenho
 
@@ -206,10 +207,10 @@ class JogadorOrientado(Jogador):
     def virar(self, direcao):
         h, w = self.vetor
         if direcao == 'esquerda':
-            self.vetor = (-w, h)
+            self.vetor = (w, -h)
             
         elif direcao == 'direita':
-            self.vetor = (w, -h)
+            self.vetor = (-w, h)
 
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
@@ -217,13 +218,14 @@ class JogadorOrientado(Jogador):
         
     def mover(self, passos=1):
         dH, dW = self.vetor
-        nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
 
         for p in range(passos):
+            nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
             if not self.labirinto.eh_parede(nova_posicao):
                 self.posicao = nova_posicao
                 self.historico.append(self.posicao)
                 self.mostrar()
+                asyncio.sleep(0.5)
 
     
     def redondezas_livres(self):
