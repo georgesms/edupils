@@ -16,8 +16,8 @@ def converter_graus_para_radianos(graus):
 # Função para rotacionar um ponto em torno do baricentro
 def rotacionar_ponto(x, y, x_centro, y_centro, angulo):
     radianos = converter_graus_para_radianos(angulo)
-    x_rotacionado = (x - x_centro) * math.cos(radianos) - (y - y_centro) * math.sin(radianos) + x_centro
-    y_rotacionado = (x - x_centro) * math.sin(radianos) + (y - y_centro) * math.cos(radianos) + y_centro
+    x_rotacionado =   (x - x_centro) * math.cos(radianos) - (y - y_centro) * math.sin(radianos) + x_centro
+    y_rotacionado = - (x - x_centro) * math.sin(radianos) - (y - y_centro) * math.cos(radianos) + y_centro
     return x_rotacionado, y_rotacionado
 
 def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_canvas, angulo=0, proporcao_base=1):
