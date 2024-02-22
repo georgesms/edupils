@@ -4,6 +4,9 @@ NOME_PAINEL_FUNDO = "painelFundo"
 NOME_PAINEL_FRENTE = "painelFrente"
 NOME_PAINEL_AUXILIAR = "painelAuxiliar"
 
+LARGURA_PADRAO_CANVAS=500
+ALTURA_PADRAO_CANVAS=300
+
 COR_PRIMARIA = "#9D21FC"
 COR_SECUNDARIA = "#34F9FF"
 COR_ESCURA = "#555555"
@@ -13,25 +16,29 @@ TRADUCAO_PADRAO_DE_LINHA = {
     "tracejada":"dashed",
     "pontilhada":"dotted",
     "solida":"solid",
-    "sólida":"solid",
 }
 
 TRADUCAO_CORES = {
     "preto":"black",
+    "preta":"black",
     "prata":"silver",
     "cinza":"gray",
     "branco":"white",
+    "branca":"white",
     "marrom":"maroon",
     "vermelho":"red",
+    "vermelha":"red",
+    "rosa":"pink",
     "roxo":"purple",
     "fucsia":"fuchsia",
     "verde":"green",
     "lima":"lime",
     "oliva":"olive",
     "amarelo":"yellow",
+    "amarela":"yellow",
     "azul-marinho":"navy",
     "azul":"blue",
-    "verde-água":"teal",
+    "verde-agua":"teal",
 }
 
 

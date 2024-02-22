@@ -1,7 +1,7 @@
 import asyncio
 from js import document
 import math
-
+from .. import constantes
 
 
 def desenhar_retangulo(x, y, largura, altura, canvas_id, cor_preenchimento):
@@ -79,6 +79,10 @@ def desenhar_arco(
 
 
 def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas, cor="black", largura=1, padrao="solid"):
+
+    cor_traduzida = constantes.traduzir(cor, constantes.TRADUCAO_CORES)
+    padrao_traduzido = constantes.traduzir(padrao, constantes.TRADUCAO_PADRAO_DE_LINHA)
+
     canvas = document.getElementById(id_canvas)  # Acessa o elemento canvas do DOM pelo seu ID.
     ctx = canvas.getContext('2d')  # Obtém o contexto de desenho 2D do canvas.
 
@@ -86,13 +90,13 @@ def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas, cor="black", lar
     ctx.moveTo(inicio_x, inicio_y)  # Move o ponto de início da linha para as coordenadas especificadas.
     ctx.lineTo(fim_x, fim_y)  # Desenha a linha até as coordenadas especificadas.
 
-    ctx.strokeStyle = cor  # Define a cor da linha.
+    ctx.strokeStyle = cor_traduzida  # Define a cor da linha.
     ctx.lineWidth = largura  # Define a largura da linha.
 
     # Define o padrão da linha.
-    if padrao == 'dashed':
+    if padrao_traduzido == 'dashed':
         ctx.setLineDash([5, 5])  # Define o padrão de linha tracejada.
-    elif padrao == 'dotted':
+    elif padrao_traduzido == 'dotted':
         ctx.setLineDash([1, 5])  # Define o padrão de linha pontilhada.
     else:
         ctx.setLineDash([])  # Linha sólida.

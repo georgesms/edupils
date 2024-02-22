@@ -1,3 +1,3 @@
 from .gude import *
 from .labirinto import *
-from .turtle import *
+from .tartaruga import *
