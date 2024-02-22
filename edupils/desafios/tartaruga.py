@@ -28,12 +28,9 @@ class Tartaruga:
 
         self.mudar_cor_linha(cor_linha)
         self.mudar_padrao_linha(padrao_linha, peso_linha)
-
-        self.mudar_cor_tartaruga(cor_tartaruga)
-
-        self.tamanho_tartaruga = tamanho_tartaruga
         
-        self.desenhar_tartaruga()
+        self.tamanho_tartaruga = tamanho_tartaruga
+        self.mudar_cor_tartaruga(cor_tartaruga)
 
     def abaixar_caneta(self):
         self.caneta_abaixada = True

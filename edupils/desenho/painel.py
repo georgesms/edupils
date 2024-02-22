@@ -19,8 +19,8 @@ def apagar_painel(id_painel):
 
 
 def criar_painel(
-        largura=500, 
-        altura=300,
+        largura=constantes.LARGURA_PADRAO_CANVAS, 
+        altura=constantes.ALTURA_PADRAO_CANVAS,
         nome_painel_fundo=constantes.NOME_PAINEL_FUNDO,
         nome_painel_frente=constantes.NOME_PAINEL_FRENTE,
         nome_painel_auxiliar=constantes.NOME_PAINEL_AUXILIAR,
