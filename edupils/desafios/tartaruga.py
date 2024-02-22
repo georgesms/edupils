@@ -40,10 +40,11 @@ class Tartaruga:
 
     def virar(self, angulo):
         self.theta += angulo
+        self.desenhar_tartaruga()
 
     def andar(self, distancia):
         x_novo = self.x + math.cos(math.radians(self.theta)) * distancia
-        y_novo = self.y + math.sin(math.radians(self.theta)) * distancia
+        y_novo = self.y - math.sin(math.radians(self.theta)) * distancia
         
         desenho.apagar_painel(self.id_canvas_frente)
         if self.caneta_abaixada:
@@ -78,6 +79,8 @@ class Tartaruga:
         self.x = self.largura_canvas / 2
         self.y = self.altura_canvas / 2
         self.theta = 0
+        desenho.apagar_painel(self.id_canvas_auxiliar)
+        self.desenhar_tartaruga()
 
     def desenhar_linha(self, inicio_x, inicio_y, fim_x, fim_y):
         canvas = document.getElementById(self.id_canvas)
