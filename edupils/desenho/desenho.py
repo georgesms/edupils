@@ -5,9 +5,11 @@ from .. import constantes
 
 
 def desenhar_retangulo(x, y, largura, altura, canvas_id, cor_preenchimento):
+    cor_preenchimento_traduzida = constantes.traduzir(cor_preenchimento, constantes.TRADUCAO_CORES)
+    
     canvas = document.getElementById(canvas_id)
     ctx = canvas.getContext('2d')
-    ctx.fillStyle = cor_preenchimento
+    ctx.fillStyle = cor_preenchimento_traduzida
     ctx.fillRect(x, y, largura, altura)
 
 def converter_graus_para_radianos(graus):
@@ -21,6 +23,8 @@ def rotacionar_ponto(x, y, x_centro, y_centro, angulo):
     return x_rotacionado, y_rotacionado
 
 def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_canvas, angulo=0, proporcao_base=1):
+    cor_traduzida = constantes.traduzir(cor, constantes.TRADUCAO_CORES)
+    
     canvas = document.getElementById(id_canvas)
     ctx = canvas.getContext('2d')
 
@@ -44,7 +48,7 @@ def desenhar_triangulo(x_baricentro, y_baricentro, raio_circunscrito, cor, id_ca
         ctx.lineTo(x, y)
     ctx.closePath()
     
-    ctx.fillStyle = cor
+    ctx.fillStyle = cor_traduzida
     ctx.fill()
 
 # New function to draw a circle
@@ -59,6 +63,9 @@ def desenhar_arco(
         cor_contorno,
         largura_contorno
     ):
+    cor_preenchimento_traduzida = constantes.traduzir(cor_preenchimento, constantes.TRADUCAO_CORES)
+    cor_contorno_traduzida = constantes.traduzir(cor_contorno, constantes.TRADUCAO_CORES)
+
     canvas = document.getElementById(id_canvas)  # Access the canvas DOM element by its ID.
     ctx = canvas.getContext('2d')  # Get the 2D drawing context of the canvas.
     angulo_inicio_rad = converter_graus_para_radianos(angulo_inicio)
@@ -68,10 +75,10 @@ def desenhar_arco(
     ctx.arc(x_centro, y_centro, raio, angulo_inicio_rad, angulo_fim_rad)  # Draw the circle path.
     
     if cor_preenchimento:
-        ctx.fillStyle = cor_preenchimento
+        ctx.fillStyle = cor_preenchimento_traduzida
         ctx.fill() 
     if cor_contorno:
-        ctx.strokeStyle = cor_contorno
+        ctx.strokeStyle = cor_contorno_traduzida
         ctx.stroke()
     if largura_contorno:
         ctx.lineWidth = largura_contorno

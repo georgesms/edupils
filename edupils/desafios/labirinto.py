@@ -24,6 +24,8 @@ class Labirinto:
 
         self.representacao = None
 
+        self.mostrar()
+
     def _contar_celulas_adjacentes(self, parede_aleatoria, tipo_posicao):
         celulas_adjacentes = 0
         h, w = parede_aleatoria
@@ -203,6 +205,8 @@ class JogadorOrientado(Jogador):
         self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
         self.redondezas_livres()
 
+        self.mostrar()
+
     def virar(self, direcao): #async
         h, w = self.vetor
         if direcao == 'esquerda':
@@ -227,7 +231,7 @@ class JogadorOrientado(Jogador):
                 self.historico.append(self.posicao)
                 #await asyncio.sleep(0.5)
                 self.mostrar()
-                
+            
 
         self.redondezas_livres()
 

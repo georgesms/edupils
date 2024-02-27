@@ -14,8 +14,11 @@ COR_CLARA = "#F5F5F5"
 
 TRADUCAO_PADRAO_DE_LINHA = {
     "tracejada":"dashed",
+    "tracejado":"dashed",
     "pontilhada":"dotted",
+    "pontilhado":"dotted",
     "solida":"solid",
+    "solido":"solid",
 }
 
 TRADUCAO_CORES = {
