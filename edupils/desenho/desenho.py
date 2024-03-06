@@ -85,7 +85,7 @@ def desenhar_arco(
         ctx.stroke()
 
 
-def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas, cor="black", largura=1, padrao="solid"):
+def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas=constantes.NOME_PAINEL_FRENTE, cor="black", largura=1, padrao="solid"):
 
     cor_traduzida = constantes.traduzir(cor, constantes.TRADUCAO_CORES)
     padrao_traduzido = constantes.traduzir(padrao, constantes.TRADUCAO_PADRAO_DE_LINHA)
@@ -110,6 +110,17 @@ def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas, cor="black", lar
 
     ctx.stroke()  # Aplica o desenho da linha.
 
+def escrever_texto(texto, x, y, id_canvas, cor="black", tamanho=12, fonte="Arial", alinhamento="start", direcao="ltr"):
+    cor_traduzida = constantes.traduzir(cor, constantes.TRADUCAO_CORES)
+    
+    canvas = document.getElementById(id_canvas)  # Acessa o elemento canvas do DOM pelo seu ID.
+    ctx = canvas.getContext('2d')  # Obtém o contexto de desenho 2D do canvas.
+
+    ctx.font = f"{tamanho}px {fonte}"  # Define a fonte e o tamanho do texto.
+    ctx.fillStyle = cor_traduzida  # Define a cor do texto.
+    ctx.textAlign = alinhamento  # Define o alinhamento horizontal do texto.
+    ctx.direction = direcao  # Define a direção do texto.
+    ctx.fillText(texto, x, y)  # Desenha o texto nas coordenadas especificadas.
 
 async def animate():
     x = 0

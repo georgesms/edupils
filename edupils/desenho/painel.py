@@ -12,7 +12,7 @@ def criar_camada(id, width, height):
     painel.style.top = 0
     return painel
 
-def apagar_painel(id_painel):
+def apagar_painel(id_painel=constantes.NOME_PAINEL_FRENTE):
     painel = document.getElementById(id_painel)
     contexto = painel.getContext('2d')
     contexto.clearRect(0, 0, painel.width, painel.height)

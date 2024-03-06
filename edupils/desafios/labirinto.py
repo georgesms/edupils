@@ -10,7 +10,7 @@ class Labirinto:
     CELULA = '_'
     NAO_VISITADO = '.'
 
-    def __init__(self, altura, largura):
+    def __init__(self, altura, largura, aleatorio=True):
         self.altura = altura
         self.largura = largura
         self.labirinto = [[Labirinto.NAO_VISITADO for _ in range(largura)] for _ in range(altura)]
@@ -19,7 +19,12 @@ class Labirinto:
         self.entrada = None
         self.saida = None
 
-        self._gerar_labirinto()
+        if aleatorio:
+            self._gerar_labirinto_aleatorio()
+        else:
+            self._gerar_labirinto_vazio()
+
+        
         self._processamento_pos_geracao()
 
         self.representacao = None
@@ -39,7 +44,7 @@ class Labirinto:
         w = int(random.random() * (self.largura - 2)) + 1
         return h, w
 
-    def _gerar_labirinto(self):
+    def _gerar_labirinto_aleatorio(self):
         altura_inicial, largura_inicial = self._gerar_posicao_no_meio()
         self.labirinto[altura_inicial][largura_inicial] = Labirinto.CELULA
         for dH, dW in Labirinto.DIRECOES:
@@ -71,6 +76,20 @@ class Labirinto:
 
             if parede_aleatoria in self.paredes:
                 self.paredes.remove(parede_aleatoria)
+
+    def _gerar_labirinto_vazio(self):
+        for i in range(self.altura):
+            for j in range(self.largura):
+                if ((i == 0) or 
+                    (i == self.altura-1) or 
+                    (j == 0) or 
+                    (j == self.largura-1)):
+                    self.labirinto[i][j] = Labirinto.PAREDE
+                    self.paredes.append([i, j])
+                else:
+                    self.labirinto[i][j] = Labirinto.CELULA
+
+
 
     def _processamento_pos_geracao(self):
         # Transformar células não visitadas em paredes
@@ -118,6 +137,24 @@ class Labirinto:
                         largura_do_tile, 
                         camada, 
                         cor_preenchimento=constantes.COR_ESCURA
+                    )
+
+        self.desenhar_saida(largura_do_tile)
+
+    def desenhar_saida(self, largura_do_tile):
+        h, w = self.saida
+        n = 4
+        d = largura_do_tile / n
+        for i in range(n):
+            for j in range(n):
+                if (i+j) % 2 == 0:
+                    desenho.desenhar_retangulo(
+                        (w) * largura_do_tile + i * d, 
+                        (h) * largura_do_tile + j * d, 
+                        d, 
+                        d, 
+                        constantes.NOME_PAINEL_FUNDO, 
+                        cor_preenchimento=constantes.COR_SECUNDARIA
                     )
 
     def get_labirinto(self):
@@ -226,11 +263,13 @@ class JogadorOrientado(Jogador):
         #await asyncio.sleep(0.1)
         for p in range(passos):
             nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
-            if not self.labirinto.eh_parede(nova_posicao):
+            if not self.labirinto.eh_parede(nova_posicao) and (self.posicao != self.labirinto.saida):
                 self.posicao = nova_posicao
                 self.historico.append(self.posicao)
-                #await asyncio.sleep(0.5)
-                self.mostrar()
+                if self.posicao == self.labirinto.saida:
+                    self.dar_os_parabens()
+                else:
+                    self.mostrar()
             
 
         self.redondezas_livres()
@@ -266,6 +305,22 @@ class JogadorOrientado(Jogador):
             id_canvas=camada, 
             angulo=self.ORIENTACAO_PARA_GRAUS[self.orientacao],
         )
+
+    def dar_os_parabens(
+            self,
+            camada=constantes.NOME_PAINEL_FRENTE,
+            largura_do_tile=25,
+        ):
+        desenho.apagar_painel(camada)
+        desenho.escrever_texto(
+            "Parabéns!",
+            largura_do_tile * self.labirinto.largura // 2,
+            largura_do_tile * self.labirinto.altura // 2,
+            camada,
+            tamanho=20,
+            cor=constantes.COR_PRIMARIA
+        )
+
 
     
 def criar_labirinto_e_jogador():
