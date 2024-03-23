@@ -1,6 +1,8 @@
 from js import document
 from .. import constantes
 
+
+
 # Function to create a canvas with specific attributes
 def criar_camada(id, width, height):
     painel = document.createElement("canvas")
@@ -42,3 +44,4 @@ def criar_painel(
 
     return div
     
+painel = criar_painel()

@@ -161,7 +161,7 @@ class Labirinto:
         return self.labirinto, self.paredes
     
 
-class Jogador(ABC):
+class Jog(ABC):
     DIRECOES = {
         'cima': (-1, 0),
         'baixo': (1, 0),
@@ -193,34 +193,7 @@ class Jogador(ABC):
             print()
 
 
-class JogadorComBussola(Jogador):
-
-    def __init__(self, labirinto):
-        super().__init__(labirinto)
-        self.representacao = "X"
-
-    def mover(self, direcao):
-        if direcao in JogadorComBussola.DIRECOES:
-            dH, dW = JogadorComBussola.DIRECOES[direcao]
-            nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
-
-            if not self.labirinto.eh_parede(nova_posicao):
-                self.posicao = nova_posicao
-                self.historico.append(self.posicao)
-                return True
-        return False
-    
-    def redondezas_livres(self):
-        redondezas = []
-        h, w = self.posicao
-
-        for direcao, (dH, dW) in Jogador.DIRECOES:
-            if not self.labirinto.eh_parede((h+dH, w+dW)):
-                redondezas.append(direcao)
-        return redondezas
-
-
-class JogadorOrientado(Jogador):
+class Jogador(Jog):
     OPCOES_REPRESENTACAO = {
         'cima': '^',
         'direita': '>',
@@ -239,7 +212,7 @@ class JogadorOrientado(Jogador):
         super().__init__(labirinto)
         self.orientacao = "baixo"
         self.vetor = Jogador.DIRECOES[self.orientacao]
-        self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
+        self.representacao = Jogador.OPCOES_REPRESENTACAO[self.orientacao]
         self.redondezas_livres()
 
         self.mostrar()
@@ -274,6 +247,14 @@ class JogadorOrientado(Jogador):
 
         self.redondezas_livres()
 
+    def teleportar_para_o_inicio(self):
+        self.posicao = self.labirinto.entrada
+        self.orientacao = "baixo"
+        self.vetor = Jogador.DIRECOES[self.orientacao]
+        self.representacao = Jogador.OPCOES_REPRESENTACAO[self.orientacao]
+        self.redondezas_livres()
+
+        self.mostrar()
     
     def redondezas_livres(self):
         self.redondezas = {}
@@ -321,16 +302,41 @@ class JogadorOrientado(Jogador):
             cor=constantes.COR_PRIMARIA
         )
 
+#class JogadorComBussola(Jog):
+
+#     def __init__(self, labirinto):
+#         super().__init__(labirinto)
+#         self.representacao = "X"
+
+#     def mover(self, direcao):
+#         if direcao in JogadorComBussola.DIRECOES:
+#             dH, dW = JogadorComBussola.DIRECOES[direcao]
+#             nova_posicao = (self.posicao[0] + dH, self.posicao[1] + dW)
+
+#             if not self.labirinto.eh_parede(nova_posicao):
+#                 self.posicao = nova_posicao
+#                 self.historico.append(self.posicao)
+#                 return True
+#         return False
+    
+#     def redondezas_livres(self):
+#         redondezas = []
+#         h, w = self.posicao
+
+#         for direcao, (dH, dW) in Jogador.DIRECOES:
+#             if not self.labirinto.eh_parede((h+dH, w+dW)):
+#                 redondezas.append(direcao)
+#         return redondezas
 
     
 def criar_labirinto_e_jogador():
     lab = Labirinto(10,10)
-    p = JogadorOrientado(lab)
+    p = Jogador(lab)
     return lab, p
 
 if __name__ == "__main__":
     lab = Labirinto(10,10)
-    p = JogadorOrientado(lab)
+    p = Jogador(lab)
 
 
     for i in range(5):
