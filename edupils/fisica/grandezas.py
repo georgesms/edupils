@@ -61,6 +61,12 @@ class Velocidade(GrandezaFisica):
         else:
             return super().__mul__(outro)
 
+    def __rmul__(self, outro):
+        if isinstance(outro, Tempo):
+            return Posicao(float(self) * float(outro))
+        else:
+            return super().__rmul__(outro)
+        
     def __truediv__(self, outro):
         if isinstance(outro, Tempo):
             return Aceleracao(float(self) / float(outro))
@@ -76,6 +82,18 @@ class Aceleracao(GrandezaFisica):
             return Velocidade(float(self) * float(outro))
         else:
             return super().__mul__(outro)
+        
+    def __rmul__(self, outro):
+        if isinstance(outro, Tempo):
+            return Velocidade(float(self) * float(outro))
+        else:
+            return super().__rmul__(outro)
+        
+    def __truediv__(self, outro):
+        if isinstance(outro, Tempo):
+            raise TypeError(f"A taxa de variação da aceleração em ({self.unidade}) no tempo em ({outro.unidade}) é uma grandeza física que não usaremos nesta atividade.")
+        else:
+            return super().__truediv__(outro)
 
 class Massa(GrandezaFisica):
     unidade = "kg"

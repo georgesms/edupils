@@ -226,7 +226,7 @@ class Jogador(Jog):
             self.vetor = (w, -h)
 
         self.orientacao = Jogador.DIRECORES_INV[self.vetor]
-        self.representacao = JogadorOrientado.OPCOES_REPRESENTACAO[self.orientacao]
+        self.representacao = Jogador.OPCOES_REPRESENTACAO[self.orientacao]
         #await asyncio.sleep(0.5)
         self.mostrar()
         self.redondezas_livres()

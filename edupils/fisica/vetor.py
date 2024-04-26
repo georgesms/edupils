@@ -8,10 +8,7 @@ class Vetor:
     
     def normalizar(self):
         norma = self.norma()
-        if norma != 0:
-            self.x /= norma
-            self.y /= norma
-        return self
+        return self / norma if norma != 0 else Vetor(0, 0)
 
     def produto_escalar(self, outro):
         return self.x * outro.x + self.y * outro.y
@@ -26,6 +23,9 @@ class Vetor:
     
     def perpendicular(self):
         return Vetor(-self.y, self.x)
+    
+    def aplicar(self, f):
+        return Vetor(f(self.x), f(self.y))
     
     def __add__(self, outro):
         return Vetor(self.x + outro.x, self.y + outro.y)
@@ -45,7 +45,16 @@ class Vetor:
     def __rmul__(self, escalar):
         # Isso permite a multiplicação escalar tanto à esquerda quanto à direita do vetor
         return self.__mul__(escalar)
+    
+    def __truediv__(self, escalar):
+        if isinstance(escalar, (int, float)):
+            return Vetor(self.x / escalar, self.y / escalar)
+        else:
+            raise TypeError("O operador deve ser um número inteiro ou flutuante")
 
+    def __iter__(self):
+        yield self.x
+        yield self.y
 
 if __name__ == "__main__":
     from grandezas import Posicao, Velocidade, Tempo
