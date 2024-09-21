@@ -241,11 +241,12 @@ class Jogador(Jog):
                 self.historico.append(self.posicao)
                 if self.posicao == self.labirinto.saida:
                     self.dar_os_parabens()
+                    print("Aeee!")
                 else:
                     self.mostrar()
             
-
-        self.redondezas_livres()
+        if (self.posicao != self.labirinto.saida):
+            self.redondezas_livres()
 
     def teleportar_para_o_inicio(self):
         self.posicao = self.labirinto.entrada
@@ -294,12 +295,12 @@ class Jogador(Jog):
         ):
         desenho.apagar_painel(camada)
         desenho.escrever_texto(
-            "Parabéns!",
-            largura_do_tile * self.labirinto.largura // 2,
-            largura_do_tile * self.labirinto.altura // 2,
+            "Parabéns!!",
+            largura_do_tile,
+            largura_do_tile * (self.labirinto.altura // 2),
             camada,
-            tamanho=20,
-            cor=constantes.COR_PRIMARIA
+            tamanho=30,
+            cor="red"
         )
 
 #class JogadorComBussola(Jog):
