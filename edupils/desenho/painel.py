@@ -19,6 +19,15 @@ def apagar_painel(id_painel=constantes.NOME_PAINEL_FRENTE):
     contexto = painel.getContext('2d')
     contexto.clearRect(0, 0, painel.width, painel.height)
 
+def clarear_com_marca_dagua(id_painel=constantes.NOME_PAINEL_FRENTE, alpha=0.5):
+    painel = document.getElementById(id_painel)
+    contexto = painel.getContext('2d')
+
+    contexto.save()
+    contexto.globalAlpha = alpha   # transparência
+    contexto.fillStyle = "white"   # cor da “marca d’água”
+    contexto.fillRect(0, 0, painel.width, painel.height)
+    contexto.restore()
 
 def criar_painel(
         largura=constantes.LARGURA_PADRAO_CANVAS, 

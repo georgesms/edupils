@@ -60,10 +60,12 @@ def desenhar_arco(
         angulo_fim, 
         id_canvas, 
         cor_preenchimento,
-        cor_contorno,
-        largura_contorno
+        cor_contorno=None,
+        largura_contorno=1,
     ):
     cor_preenchimento_traduzida = constantes.traduzir(cor_preenchimento, constantes.TRADUCAO_CORES)
+    if cor_contorno is None:
+        cor_contorno = cor_preenchimento
     cor_contorno_traduzida = constantes.traduzir(cor_contorno, constantes.TRADUCAO_CORES)
 
     canvas = document.getElementById(id_canvas)  # Access the canvas DOM element by its ID.
@@ -84,6 +86,10 @@ def desenhar_arco(
         ctx.lineWidth = largura_contorno
         ctx.stroke()
 
+def desenhar_circulo(x, y, raio, id_canvas, cor_preenchimento, cor_contorno=None, largura_contorno=1):
+    desenhar_arco(
+        x, y, raio, 0, 360, id_canvas, cor_preenchimento, cor_contorno, largura_contorno
+    )
 
 def desenhar_linha(inicio_x, inicio_y, fim_x, fim_y, id_canvas=constantes.NOME_PAINEL_FRENTE, cor="black", largura=1, padrao="solid"):
 

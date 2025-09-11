@@ -1,4 +1,4 @@
-from .. import constantes, desenho
+from edupils import constantes, desenho
 import asyncio
 
 
@@ -27,10 +27,19 @@ class Objeto:
     def desenhar(self, camada=constantes.NOME_PAINEL_FRENTE):
         x = (self.posicao + self.origem_metros[0]) * self.pixels_por_metro
         y = (self.altura + self.origem_metros[1] - 1) * self.pixels_por_metro
-        desenho.desenhar_retangulo(
-            x, y, 20, 20, camada, cor_preenchimento=self.cor
-        )
-        # Para outras formas (círculo etc.), adicione novas chamadas em desenho.*
+        if self.forma == "quadrado":
+            desenho.desenhar_retangulo(
+                x, y, 20, 20, camada, cor_preenchimento=self.cor
+            )
+        elif self.forma == "triangulo":
+            desenho.desenhar_triangulo(
+                x+10, y+12, 14, self.cor, camada, angulo=270, proporcao_base=1.61
+            )
+        elif self.forma == "circulo":
+            desenho.desenhar_arco(
+                x+10, y+10, 10, 0, 360, camada, cor_preenchimento=self.cor, cor_contorno=self.cor, largura_contorno=1
+            )
+
 
 
 class Animacao:
@@ -41,12 +50,14 @@ class Animacao:
         distancia_em_metros=20,
         origem_em_metros=(10, 1),
         pixels_por_metro=25,
+        deixar_rastro=False,
     ):
         self.tempo = tempo
         self.frames_por_segundo = frames_por_segundo
         self.distancia_em_metros = distancia_em_metros
         self.origem_em_metros = origem_em_metros
         self.pixels_por_metro = pixels_por_metro
+        self.deixar_rastro = deixar_rastro
         self.objetos = {}
         self.desenhar_eixo_x()
 
@@ -69,7 +80,7 @@ class Animacao:
             pixels_por_metro=self.pixels_por_metro,
         )
 
-    def desenhar_eixo_x(self, camada=constantes.NOME_PAINEL_FUNDO):
+    def desenhar_eixo_x(self, camada=constantes.NOME_PAINEL_AUXILIAR):
         desenho.apagar_painel(camada)
         inicio_y = self.origem_em_metros[1] * self.pixels_por_metro
         fim_y = inicio_y
@@ -92,16 +103,46 @@ class Animacao:
             )
             desenho.desenhar_linha(x, inicio_y, x, inicio_y + 5, id_canvas=camada)
 
+    def desenhar_tempo(self, t, camada=constantes.NOME_PAINEL_FRENTE):
+        desenho.escrever_texto(
+            f"t = {t:.1f} s",
+            400,
+            100,
+            id_canvas=camada,
+            tamanho=12,
+            cor="black",
+        )
+
+    def desenhar_quadro(self, t, camada=constantes.NOME_PAINEL_FRENTE):
+        desenho.apagar_painel(camada)
+        self.desenhar_tempo(t, camada=camada)
+        for obj in self.objetos.values():
+            obj.posicao = obj.funcao_movimento(t)
+            obj.desenhar(camada=camada)
+
+    def desenhar_rastro(self, t, camada=constantes.NOME_PAINEL_FUNDO):
+        for obj in self.objetos.values():
+            obj.posicao = obj.funcao_movimento(t)
+            obj.desenhar(camada=camada)
+        desenho.clarear_com_marca_dagua(camada, .6)
+
+    def apagar_tudo(self):
+        for camada in [constantes.NOME_PAINEL_FUNDO, constantes.NOME_PAINEL_FRENTE]:
+            desenho.apagar_painel(camada)
+
     async def animar(self):
+        self.apagar_tudo()
         max_steps = int(self.tempo * self.frames_por_segundo)
         dt = 1 / self.frames_por_segundo
 
         for step in range(max_steps):
             t = step * dt
-            desenho.apagar_painel(constantes.NOME_PAINEL_FRENTE)
-
-            for obj in self.objetos.values():
-                obj.posicao = obj.funcao_movimento(t)
-                obj.desenhar()
-
+            
+            self.desenhar_quadro(t)
+            if self.deixar_rastro and (t % 1 < .001):
+                self.desenhar_rastro(t, camada=constantes.NOME_PAINEL_FUNDO)
+            
             await asyncio.sleep(dt)
+
+class Animacao2D(Animacao):
+    pass
