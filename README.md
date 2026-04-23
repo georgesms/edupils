@@ -114,10 +114,13 @@ Atividades completas prontas para usar em sala.
   # 1D
   anim.adicionar_objeto("bola", 0, lambda t: 2*t, cor="roxo", rastro=True)
   anim.adicionar_objeto("carro", 0, lambda t: 0.5*t**2, forma="triangulo", cor="verde")
-  # 2D (lançamento oblíquo)
+  # 2D (lançamento oblíquo com vetor velocidade acompanhando)
   anim.adicionar_objeto("projetil", (0, 0),
                         lambda t: (10*t, 20*t - 0.5*9.8*t**2),
                         cor="azul", rastro=True)
+  anim.adicionar_seta("v",
+                      origem=lambda t: (10*t, 20*t - 0.5*9.8*t**2),
+                      deslocamento=lambda t: (10, 20 - 9.8*t))
   await anim.animar()
   ```
 
@@ -159,7 +162,7 @@ Esqueleto para manipulação de imagens e áudio — ainda não implementados.
 |------|--------|---------|----------|
 | 1    | 1. Posição em 2D ✅                       | M | NB 08, 09, 10, 11, 13 |
 | 2    | 2a. Rastro por objeto (flag booleana) ✅  | P | NB 09, 10, 13 |
-| 2    | 3. Setas / vetores                        | M | NB 04, 08, 09, 11 |
+| 2    | 3. Setas / vetores ✅                     | M | NB 04, 08, 09, 11 |
 | 3    | 2b. Rastro com janela (`rastro_tempo`)    | M | caso circular na NB 13 |
 | 3    | 4. Gráfico sincronizado                   | G | NB 03, 04, 05, 06 |
 
@@ -220,7 +223,7 @@ Passos:
 - [ ] Remover `deixar_rastro` de `Animacao.__init__` (quebra de API — a
       NB mais antiga que usa isso precisa de um bump).
 
-### [ ] 3. Setas / vetores — NB 04, 08, 09, 11
+### [x] 3. Setas / vetores — NB 04, 08, 09, 11
 
 Novo tipo de objeto com **origem** e **deslocamento** — ambos funções
 de $t$ que devolvem tupla.

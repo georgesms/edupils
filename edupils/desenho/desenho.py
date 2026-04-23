@@ -128,6 +128,37 @@ def escrever_texto(texto, x, y, id_canvas, cor="black", tamanho=12, fonte="Arial
     ctx.direction = direcao  # Define a direção do texto.
     ctx.fillText(texto, x, y)  # Desenha o texto nas coordenadas especificadas.
 
+def desenhar_seta(
+        x0, y0, dx, dy,
+        id_canvas=constantes.NOME_PAINEL_FRENTE,
+        cor="black",
+        largura=2,
+        tamanho_ponta=8,
+    ):
+    """Seta de (x0, y0) até (x0+dx, y0+dy). tamanho_ponta em pixels."""
+    comprimento = math.sqrt(dx**2 + dy**2)
+    if comprimento == 0:
+        return
+
+    # Corpo termina no centro do triângulo da ponta, pra não atravessar a ponta.
+    ux = dx / comprimento
+    uy = dy / comprimento
+    x_centro_ponta = x0 + dx - ux * tamanho_ponta
+    y_centro_ponta = y0 + dy - uy * tamanho_ponta
+
+    desenhar_linha(
+        x0, y0, x_centro_ponta, y_centro_ponta,
+        id_canvas=id_canvas, cor=cor, largura=largura,
+    )
+
+    # desenhar_triangulo segue convenção matemática (y para cima); o -dy inverte.
+    angulo_graus = math.degrees(math.atan2(-dy, dx))
+    desenhar_triangulo(
+        x_centro_ponta, y_centro_ponta,
+        tamanho_ponta, cor, id_canvas,
+        angulo=angulo_graus, proporcao_base=1.0,
+    )
+
 async def animate():
     x = 0
     y = 50

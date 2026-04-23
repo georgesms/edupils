@@ -31,6 +31,9 @@ class Objeto:
         self.rastro = rastro
         self.desenhar()
 
+    def atualizar(self, t):
+        self.posicao = _normalizar_posicao(self.funcao_movimento(t))
+
     def desenhar(self, camada=constantes.NOME_PAINEL_FRENTE):
         ox, oy = self.origem_metros
         ppm = self.pixels_por_metro
@@ -52,6 +55,45 @@ class Objeto:
                 x + 10, y + 10, 10, 0, 360, camada,
                 cor_preenchimento=self.cor, cor_contorno=self.cor, largura_contorno=1,
             )
+
+
+class Seta:
+    def __init__(
+        self,
+        nome,
+        origem,
+        deslocamento,
+        cor="vermelho",
+        origem_em_metros=(10, 1),
+        pixels_por_metro=25,
+    ):
+        self.nome = nome
+        self.origem = origem                # função t -> (x, y) em metros
+        self.deslocamento = deslocamento    # função t -> (dx, dy) em metros
+        self.cor = cor
+        self.origem_metros = origem_em_metros
+        self.pixels_por_metro = pixels_por_metro
+        self.rastro = False                 # setas não deixam rastro
+        self.atualizar(0)
+        self.desenhar()
+
+    def atualizar(self, t):
+        self.posicao = _normalizar_posicao(self.origem(t))
+        self.vetor = _normalizar_posicao(self.deslocamento(t))
+
+    def desenhar(self, camada=constantes.NOME_PAINEL_FRENTE):
+        ox, oy = self.origem_metros
+        ppm = self.pixels_por_metro
+        x_m, y_m = self.posicao
+        dx_m, dy_m = self.vetor
+        x0 = (x_m + ox) * ppm
+        y0 = (oy - y_m) * ppm            # seta usa coord. de mundo direta (sem o -1 do Objeto)
+        dx_px = dx_m * ppm
+        dy_px = -dy_m * ppm              # inverte y porque na tela cresce para baixo
+        desenho.desenhar_seta(
+            x0, y0, dx_px, dy_px,
+            id_canvas=camada, cor=self.cor,
+        )
 
 
 class Animacao:
@@ -92,6 +134,22 @@ class Animacao:
             origem_em_metros=self.origem_em_metros,
             pixels_por_metro=self.pixels_por_metro,
             rastro=rastro,
+        )
+
+    def adicionar_seta(
+        self,
+        nome,
+        origem,
+        deslocamento,
+        cor="vermelho",
+    ):
+        self.objetos[nome] = Seta(
+            nome,
+            origem,
+            deslocamento,
+            cor=cor,
+            origem_em_metros=self.origem_em_metros,
+            pixels_por_metro=self.pixels_por_metro,
         )
 
     def desenhar_eixos(self, camada=constantes.NOME_PAINEL_AUXILIAR):
@@ -140,7 +198,7 @@ class Animacao:
         desenho.apagar_painel(camada)
         self.desenhar_tempo(t, camada=camada)
         for obj in self.objetos.values():
-            obj.posicao = _normalizar_posicao(obj.funcao_movimento(t))
+            obj.atualizar(t)
             obj.desenhar(camada=camada)
 
     def desenhar_rastro(self, t, camada=constantes.NOME_PAINEL_FUNDO):
@@ -148,7 +206,7 @@ class Animacao:
         if not objetos_com_rastro:
             return
         for obj in objetos_com_rastro:
-            obj.posicao = _normalizar_posicao(obj.funcao_movimento(t))
+            obj.atualizar(t)
             obj.desenhar(camada=camada)
         desenho.clarear_com_marca_dagua(camada, .6)
 
