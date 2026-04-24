@@ -30,13 +30,13 @@ def clarear_com_marca_dagua(id_painel=constantes.NOME_PAINEL_FRENTE, alpha=0.5):
     contexto.restore()
 
 def criar_painel(
-        largura=constantes.LARGURA_PADRAO_CANVAS, 
+        largura=constantes.LARGURA_PADRAO_CANVAS,
         altura=constantes.ALTURA_PADRAO_CANVAS,
         nome_painel_fundo=constantes.NOME_PAINEL_FUNDO,
         nome_painel_frente=constantes.NOME_PAINEL_FRENTE,
         nome_painel_auxiliar=constantes.NOME_PAINEL_AUXILIAR,
     ):
-    
+
     div = document.createElement("div")
     div.setAttribute("id", "gameCanvas")
     div.style.setProperty("position", "relative")
@@ -44,13 +44,32 @@ def criar_painel(
     div.style.setProperty("height", f"{altura}px")
 
     for nome_painel in (
-        [nome_painel_fundo] + 
-        [nome_painel_auxiliar] + 
+        [nome_painel_fundo] +
+        [nome_painel_auxiliar] +
         [nome_painel_frente]
     ):
         painel = criar_camada(nome_painel, largura, altura)
         div.appendChild(painel)
 
     return div
-    
+
+def criar_painel_grafico(
+        largura=constantes.LARGURA_PADRAO_GRAFICO,
+        altura=constantes.ALTURA_PADRAO_GRAFICO,
+        nome_fundo=constantes.NOME_PAINEL_GRAFICO_FUNDO,
+        nome_frente=constantes.NOME_PAINEL_GRAFICO_FRENTE,
+    ):
+    div = document.createElement("div")
+    div.setAttribute("id", "graficoCanvas")
+    div.style.setProperty("position", "relative")
+    div.style.setProperty("width", f"{largura}px")
+    div.style.setProperty("height", f"{altura}px")
+
+    for nome in [nome_fundo, nome_frente]:
+        camada = criar_camada(nome, largura, altura)
+        div.appendChild(camada)
+
+    return div
+
 painel = criar_painel()
+painel_grafico = criar_painel_grafico()

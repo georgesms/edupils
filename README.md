@@ -109,7 +109,9 @@ Atividades completas prontas para usar em sala.
   tupla `(x, y)` para 2D.
 
   ```python
+  from edupils.desenho import painel, painel_grafico       # os dois canvases
   from edupils.desafios.cinematica import Animacao
+
   anim = Animacao(tempo=8, frames_por_segundo=20)
   # 1D
   anim.adicionar_objeto("bola", 0, lambda t: 2*t, cor="roxo", rastro=True)
@@ -121,6 +123,12 @@ Atividades completas prontas para usar em sala.
   anim.adicionar_seta("v",
                       origem=lambda t: (10*t, 20*t - 0.5*9.8*t**2),
                       deslocamento=lambda t: (10, 20 - 9.8*t))
+  # gráfico sincronizado (exige painel_grafico mostrado numa célula)
+  anim.adicionar_grafico(
+      eixo_y="posição [m]",
+      curvas={"bola": lambda t: 2*t, "carro": lambda t: 0.5*t**2},
+      cores={"bola": "roxo", "carro": "verde"},
+  )
   await anim.animar()
   ```
 
@@ -164,7 +172,7 @@ Esqueleto para manipulação de imagens e áudio — ainda não implementados.
 | 2    | 2a. Rastro por objeto (flag booleana) ✅  | P | NB 09, 10, 13 |
 | 2    | 3. Setas / vetores ✅                     | M | NB 04, 08, 09, 11 |
 | 3    | 2b. Rastro com janela (`rastro_tempo`)    | M | caso circular na NB 13 |
-| 3    | 4. Gráfico sincronizado                   | G | NB 03, 04, 05, 06 |
+| 3    | 4. Gráfico sincronizado ✅                | G | NB 03, 04, 05, 06 |
 
 **Fruta mais baixa:** 2a. Trocar o `deixar_rastro` global por flag no objeto
 é um mini-refactor do `desenhar_rastro` — meia tarde de trabalho.
@@ -279,7 +287,7 @@ Passos:
       finas (e não mais com snapshot + marca d’água). A marca d’água
       continua disponível para o modo "rastro infinito" do 2a.
 
-### [ ] 4. Gráfico sincronizado — NB 03, 04, 05, 06
+### [x] 4. Gráfico sincronizado — NB 03, 04, 05, 06
 
 Painel novo que compartilha o relógio da animação. Recebe funções de $t$,
 desenha as curvas, e um cursor vertical desliza conforme a animação avança.

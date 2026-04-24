@@ -96,6 +96,145 @@ class Seta:
         )
 
 
+class Grafico:
+    CORES_PADRAO = ["roxo", "verde", "azul", "vermelho", "amarelo"]
+
+    def __init__(
+        self,
+        curvas,
+        eixo_y="",
+        tempo_max=10,
+        cores=None,
+        largura=constantes.LARGURA_PADRAO_GRAFICO,
+        altura=constantes.ALTURA_PADRAO_GRAFICO,
+        margem=40,
+        amostras=200,
+        painel_fundo=constantes.NOME_PAINEL_GRAFICO_FUNDO,
+        painel_frente=constantes.NOME_PAINEL_GRAFICO_FRENTE,
+    ):
+        self.curvas = curvas
+        self.eixo_y = eixo_y
+        self.tempo_max = tempo_max
+        self.largura = largura
+        self.altura = altura
+        self.margem = margem
+        self.painel_fundo = painel_fundo
+        self.painel_frente = painel_frente
+        self.t_atual = 0
+
+        # cor por curva: prioriza o que o aluno passou; cai no palette padrão.
+        self.cores = {}
+        for i, nome in enumerate(curvas):
+            if cores and nome in cores:
+                self.cores[nome] = cores[nome]
+            else:
+                self.cores[nome] = Grafico.CORES_PADRAO[i % len(Grafico.CORES_PADRAO)]
+
+        # Pré-amostragem: descobre min/max do eixo y e guarda os pontos para redesenho.
+        self.ts = [tempo_max * i / (amostras - 1) for i in range(amostras)]
+        self.amostras = {}
+        todos_y = []
+        for nome, f in curvas.items():
+            ys = [f(t) for t in self.ts]
+            self.amostras[nome] = ys
+            todos_y.extend(ys)
+
+        self.y_min = min(todos_y)
+        self.y_max = max(todos_y)
+        span = self.y_max - self.y_min
+        if span == 0:
+            span = 1
+        # folga de 10% em cima e embaixo para a curva não colar no eixo
+        self.y_min -= span * 0.1
+        self.y_max += span * 0.1
+
+        self._desenhar_fundo()
+
+    def _t_para_px(self, t):
+        faixa = self.largura - 2 * self.margem
+        return self.margem + (t / self.tempo_max) * faixa
+
+    def _y_para_px(self, y):
+        faixa = self.altura - 2 * self.margem
+        return (self.altura - self.margem) - ((y - self.y_min) / (self.y_max - self.y_min)) * faixa
+
+    def _desenhar_fundo(self):
+        desenho.apagar_painel(self.painel_fundo)
+
+        x_esq = self.margem
+        x_dir = self.largura - self.margem
+        y_topo = self.margem
+        y_base = self.altura - self.margem
+
+        # eixos
+        desenho.desenhar_linha(x_esq, y_base, x_dir, y_base, id_canvas=self.painel_fundo)
+        desenho.desenhar_linha(x_esq, y_topo, x_esq, y_base, id_canvas=self.painel_fundo)
+
+        # rótulos
+        desenho.escrever_texto("t [s]", x_dir + 5, y_base + 4, id_canvas=self.painel_fundo, tamanho=10)
+        desenho.escrever_texto(self.eixo_y, x_esq - 5, y_topo - 5, id_canvas=self.painel_fundo, tamanho=10)
+
+        # ticks no eixo t
+        for i in range(6):
+            t = self.tempo_max * i / 5
+            x = self._t_para_px(t)
+            desenho.desenhar_linha(x, y_base, x, y_base + 4, id_canvas=self.painel_fundo)
+            desenho.escrever_texto(f"{t:.1f}", x - 8, y_base + 14, id_canvas=self.painel_fundo, tamanho=10)
+
+        # ticks no eixo y
+        for i in range(5):
+            y_val = self.y_min + (self.y_max - self.y_min) * i / 4
+            y = self._y_para_px(y_val)
+            desenho.desenhar_linha(x_esq - 4, y, x_esq, y, id_canvas=self.painel_fundo)
+            desenho.escrever_texto(f"{y_val:.1f}", x_esq - 32, y + 3, id_canvas=self.painel_fundo, tamanho=10)
+
+        # curvas
+        for nome, ys in self.amostras.items():
+            cor = self.cores[nome]
+            for i in range(len(self.ts) - 1):
+                desenho.desenhar_linha(
+                    self._t_para_px(self.ts[i]),
+                    self._y_para_px(ys[i]),
+                    self._t_para_px(self.ts[i + 1]),
+                    self._y_para_px(ys[i + 1]),
+                    id_canvas=self.painel_fundo, cor=cor, largura=2,
+                )
+
+        # legenda
+        for i, nome in enumerate(self.curvas):
+            cor = self.cores[nome]
+            y_leg = y_topo + 10 + i * 15
+            desenho.desenhar_linha(
+                x_dir - 80, y_leg, x_dir - 60, y_leg,
+                id_canvas=self.painel_fundo, cor=cor, largura=2,
+            )
+            desenho.escrever_texto(
+                nome, x_dir - 55, y_leg + 3,
+                id_canvas=self.painel_fundo, tamanho=10,
+            )
+
+    def atualizar(self, t):
+        self.t_atual = t
+
+    def desenhar(self):
+        desenho.apagar_painel(self.painel_frente)
+        x = self._t_para_px(self.t_atual)
+        # cursor vertical
+        desenho.desenhar_linha(
+            x, self.margem, x, self.altura - self.margem,
+            id_canvas=self.painel_frente,
+            cor="cinza", largura=1, padrao="tracejada",
+        )
+        # ponto sobre cada curva no tempo atual
+        for nome, f in self.curvas.items():
+            y = self._y_para_px(f(self.t_atual))
+            desenho.desenhar_circulo(
+                x, y, 4,
+                id_canvas=self.painel_frente,
+                cor_preenchimento=self.cores[nome],
+            )
+
+
 class Animacao:
     def __init__(
         self,
@@ -114,6 +253,7 @@ class Animacao:
         self.origem_em_metros = origem_em_metros
         self.pixels_por_metro = pixels_por_metro
         self.objetos = {}
+        self.grafico = None
         self.desenhar_eixos()
 
     def adicionar_objeto(
@@ -150,6 +290,14 @@ class Animacao:
             cor=cor,
             origem_em_metros=self.origem_em_metros,
             pixels_por_metro=self.pixels_por_metro,
+        )
+
+    def adicionar_grafico(self, curvas, eixo_y="", cores=None):
+        self.grafico = Grafico(
+            curvas=curvas,
+            eixo_y=eixo_y,
+            tempo_max=self.tempo,
+            cores=cores,
         )
 
     def desenhar_eixos(self, camada=constantes.NOME_PAINEL_AUXILIAR):
@@ -225,5 +373,8 @@ class Animacao:
             self.desenhar_quadro(t)
             if t % 1 < .001:
                 self.desenhar_rastro(t)
+            if self.grafico is not None:
+                self.grafico.atualizar(t)
+                self.grafico.desenhar()
 
             await asyncio.sleep(dt)
